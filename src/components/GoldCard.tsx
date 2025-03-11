@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, Box } from '@mui/material';
 import { GoldPrice } from '../types/GoldTypes';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import { format } from 'date-fns';
+import { formatDistance } from 'date-fns';
 import { tr } from 'date-fns/locale';
 
 interface GoldCardProps {
@@ -40,7 +40,7 @@ export const GoldCard = ({ data, title }: GoldCardProps) => {
 
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="body2" color="text.secondary">
-            {format(new Date(data.lastUpdate), 'dd MMMM HH:mm', { locale: tr })}
+            {formatDistance(new Date(data.lastUpdate), new Date(), { locale: tr })}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             {isPositiveChange ? (
