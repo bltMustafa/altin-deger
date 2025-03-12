@@ -84,6 +84,38 @@ async function getDataFromCache() {
   return cachedData;
 }
 
+// Değişim oranını düzgün formatlayan yardımcı fonksiyon
+function formatChangeRate(changeRateStr: string | undefined): string {
+  if (!changeRateStr) return "0.00";
+  
+  // % işaretini kaldır
+  let cleaned = changeRateStr.replace('%', '');
+  
+  // Virgülü noktaya çevir
+  cleaned = cleaned.replace(',', '.');
+  
+  // Boşlukları temizle
+  cleaned = cleaned.trim();
+  
+  // Sayısal değer kontrolü
+  if (isNaN(parseFloat(cleaned))) return "0.00";
+  
+  return cleaned;
+}
+
+// Fiyat değerini düzgün formatlayan yardımcı fonksiyon
+function formatPrice(priceStr: string | undefined): string {
+  if (!priceStr) return "0.00";
+  
+  // Nokta ve virgülleri temizle, sayıya çevir
+  const cleanedStr = priceStr.replace(/\./g, '').replace(',', '.');
+  
+  // Sayısal değer kontrolü
+  if (isNaN(parseFloat(cleanedStr))) return "0.00";
+  
+  return cleanedStr;
+}
+
 // Altın fiyatlarını getir
 export async function getGoldPrices() {
   try {
@@ -120,12 +152,15 @@ export async function getGoldPrices() {
         const data = goldPrices[key] as GoldPrice;
         return {
           name,
-          buying: data.Alış?.replace('$', '') || data.Alış,
-          selling: data.Satış?.replace('$', '') || data.Satış,
-          change_rate: data.Değişim?.replace('%', '') || "0.00",
-          type: data.Tür,
+          buying: formatPrice(data.Alış),
+          selling: formatPrice(data.Satış),
+          change_rate: formatChangeRate(data.Değişim),
+          type: data.Tür || "Altın",
           update_date: goldPrices.Update_Date || new Date().toISOString(),
-          market_status: isMarketOpen() ? "Açık" : "Kapalı"
+          market_status: isMarketOpen() ? "Açık" : "Kapalı",
+          // Orijinal değerleri de saklayalım
+          original_buying: data.Alış || "",
+          original_selling: data.Satış || ""
         };
       });
 
@@ -201,12 +236,15 @@ export async function getExchangeRates() {
         const data = exchangeRates[code] as ExchangeRate;
         return {
           name: code,
-          buying: data.Alış,
-          selling: data.Satış,
-          change_rate: data.Değişim?.replace('%', '') || "0.00",
-          type: data.Tür,
+          buying: formatPrice(data.Alış),
+          selling: formatPrice(data.Satış),
+          change_rate: formatChangeRate(data.Değişim),
+          type: data.Tür || "Döviz",
           update_date: exchangeRates.Update_Date || new Date().toISOString(),
-          market_status: isMarketOpen() ? "Açık" : "Kapalı"
+          market_status: isMarketOpen() ? "Açık" : "Kapalı",
+          // Orijinal değerleri de saklayalım
+          original_buying: data.Alış || "",
+          original_selling: data.Satış || ""
         };
       });
 

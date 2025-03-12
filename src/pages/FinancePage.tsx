@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Grid, Box, Typography, CircularProgress, Tabs, Tab } from '@mui/material';
+import { Container, Grid, Box, Typography, CircularProgress, Tabs, Tab, Paper } from '@mui/material';
 import { Header } from '../components/Header';
 import { GoldPriceCard } from '../components/GoldPriceCard';
 import { fetchGoldRates, fetchExchangeRates, GoldRate } from '../services/goldService';
@@ -55,20 +55,34 @@ export default function FinancePage() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 120000); // 2 dakikada bir güncelle
+    const interval = setInterval(fetchData, 120000);
     return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <CircularProgress />
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '70vh',
+        gap: 3
+      }}>
+        <CircularProgress size={60} thickness={4} />
+        <Typography variant="h6" color="text.secondary">
+          Piyasa verileri yükleniyor...
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ bgcolor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box sx={{ 
+      bgcolor: '#f8f9fa', 
+      minHeight: '100vh',
+      backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(255,215,0,0.03) 0%, rgba(0,0,0,0) 70%)'
+    }}>
       <Header onRefresh={fetchData} lastUpdate={lastUpdate} />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -82,33 +96,54 @@ export default function FinancePage() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             mb: 4,
-            mt: 6,
+            mt: 4,
             fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' }
           }}
         >
           Güncel Piyasa Verileri
         </Typography>
 
-        <Box sx={{ 
-          borderBottom: 1, 
-          borderColor: 'divider',
-          mt: 2
-        }}>
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            borderRadius: 2,
+            overflow: 'hidden',
+            mb: 4,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            border: '1px solid rgba(0,0,0,0.08)'
+          }}
+        >
           <Tabs 
             value={value} 
             onChange={handleChange} 
-            centered
+            variant="fullWidth"
             sx={{
               '& .MuiTab-root': {
                 fontSize: { xs: '0.875rem', sm: '1rem' },
-                fontWeight: 600
+                fontWeight: 600,
+                py: 2
+              },
+              '& .Mui-selected': {
+                color: value === 0 ? '#FFB300' : '#1976D2',
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: value === 0 ? '#FFB300' : '#1976D2',
+                height: 3
               }
             }}
           >
-            <Tab label="Altın Fiyatları" />
-            <Tab label="Döviz Kurları" />
+            <Tab 
+              label="Altın Fiyatları" 
+              icon={<Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: '#FFB300', mb: 0.5 }} />}
+              iconPosition="start"
+            />
+            <Tab 
+              label="Döviz Kurları" 
+              icon={<Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: '#1976D2', mb: 0.5 }} />}
+              iconPosition="start"
+            />
           </Tabs>
-        </Box>
+        </Paper>
 
         <TabPanel value={value} index={0}>
           <Grid container spacing={3}>

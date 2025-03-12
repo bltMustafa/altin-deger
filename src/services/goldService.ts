@@ -8,6 +8,8 @@ export interface GoldRate {
   type: string;
   update_date: string;
   market_status: string;
+  original_buying?: string;
+  original_selling?: string;
 }
 
 export const fetchGoldRates = async (): Promise<GoldRate[]> => {
