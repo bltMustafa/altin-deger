@@ -4,6 +4,7 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import UpdateIcon from '@mui/icons-material/Update';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { FAQ } from '../components/FAQ';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -209,6 +210,10 @@ export default function LandingPage() {
             Fiyatları Görüntüle
           </Button>
         </Container>
+      </Box>
+
+      <Box sx={{ mt: 8 }}>
+        <FAQ />
       </Box>
     </Box>
   );
