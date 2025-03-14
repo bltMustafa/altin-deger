@@ -9,7 +9,7 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import ScaleIcon from '@mui/icons-material/Scale';
